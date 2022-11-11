@@ -1,0 +1,34 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+		<br>
+<H5></H5>
+<div class="container-fluid">
+		<div class="row">
+			{% for gig in gigs %}
+			<div class="col-md-6">
+			<div class="card">
+				<div class="card">
+					<h5><strong>Title:{{gig.title}}</strong></h5>
+					<h6>Subject:{{gig.subject}}</h6>
+					<h6>Deadline:{{gig.deadline}}</h6>
+					<p class="card-text">{{gig.description}}</p>
+					<h5 style="display:inline-block;float:right" >Price:Ksh.{{gig.price|floatformat:2}}</h5>
+					<div class="card-footer">
+						<h5>
+							<a class="btn btn-ountline-success" href="#"> Bid </a>
+						</h5>
+					</div>
+				</div>
+		</div>
+
+
+
+
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock content %}
