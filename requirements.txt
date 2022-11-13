@@ -1,3 +1,4 @@
+python-3.8.1
 asgiref==3.5.2
 certifi==2022.9.24
 charset-normalizer==2.1.1
@@ -8,6 +9,7 @@ django-heroku==0.3.1
 django-phonenumber-field==7.0.0
 filelock==3.8.0
 gunicorn==20.1.0
+heroku==0.1.4
 idna==3.4
 phonenumbers==8.13.0
 pipenv==2022.10.12
