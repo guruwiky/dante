@@ -19,6 +19,7 @@ class Gig(models.Model):
             ('Available','Available'),
             ('Assigned','Assigned'),
         )
+
     title=models.CharField(max_length=200, null=True)
     subject=models.CharField(max_length=200, null=True)
     price=models.FloatField(null=True)
@@ -35,7 +36,12 @@ class Order(models.Model):
             ('Rejected','Rejected'),
             ('Paid','Paid'),
         )
+
+
     writer=models.ForeignKey(Writer,null=True, on_delete=models.SET_NULL)
+    orderid=models.CharField(max_length=200, null=True)
     gig=models.ForeignKey(Gig,null=True, on_delete=models.SET_NULL)
     price=models.FloatField(null=True)
     status=models.CharField(max_length=200, null=True,choices=STATUS)
+    #def __str__(self):
+       # return self.orderid

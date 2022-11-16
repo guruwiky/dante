@@ -11,9 +11,9 @@
 		<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
-					<th>Product</th>
-					<th>Note</th>
-					<th>Date Orderd</th>
+					<th>Order</th>
+					<th>Subject</th>
+					<th>Price</th>
 					<th>Status</th>
 				</tr>
 
@@ -21,8 +21,8 @@
 
 				<tr>
 					<td>{{order.gig}}</td>
-					<td>{{order.note}}</td>
-					<td>{{order.date_created}}</td>
+					<td>{{gig.subject}}</td>
+					<td>{{order.price}}</td>
 					<td>{{order.status}}</td>
 				</tr>
 				{% endfor %}
