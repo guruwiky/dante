@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
 	path('', views.home,name='home'),
+	
+	path('referrals/<str:ref_code>/', views.referrals, name='referrals'),
+	path('referrals/', views.referrals, name='referrals'),
 	path('landing/', views.landing,name='landing'),
 	path('simple_upload/', views.simple_upload,name='simple_upload'),
 	path('gigs/', views.gigs,name='gigs'),

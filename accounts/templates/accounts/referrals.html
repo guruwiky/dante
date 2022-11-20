@@ -1,0 +1,17 @@
+{% extends 'accounts/main.html' %}
+
+{% block title %}
+home
+{% endblock title %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+        {{request.user}}
+    {% else %}
+        <a href="{% url 'signup' %}">
+            
+        </a>
+    {% endif %}
+    
+{% endblock content %}

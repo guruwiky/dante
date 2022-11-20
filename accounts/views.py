@@ -29,6 +29,17 @@ def home(request):
 	'pending':pending }
 
 	return render(request, 'accounts/dashboard.html', context)
+@login_required(login_url='login')
+def referrals(request, *args, **kwargs):
+    code = str(kwargs.get('ref_code'))
+    try:
+        writer = Writer.objects.get(code=code)
+        request.session['ref_writer'] = writer.id
+        print('id', writer.id)
+    except:
+        pass
+    print(request.session.get_expiry_age())
+    return render(request, 'accounts/referrals.html', {})
 @unauthenticated_user
 def loginPage(request):
 	

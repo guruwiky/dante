@@ -79,25 +79,23 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
               <i class="fab fa-safari"></i>
-              <span data-feather="home"></span>
+              
               Dashboard
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <i class="fas fa-handshake"></i>
-              <span data-feather="file"></span>
+             
               Orders
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'gigs' %}">
               <i class="fas fa-coins"></i>
               
-
-              <span data-feather="shopping-cart"></span>
               Gigs
             </a>
           </li>
@@ -110,17 +108,17 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'referrals' %}">
               <i class="fas fa-user-graduate"></i>
               
-              <span data-feather="bar-chart-2"></span>
+              
               Training
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{% url 'referrals' %}">
               <i class="fas fa-cog fa-pulse"></i>
-              <span data-feather="layers"></span>
+              
               Account activation
             </a>
           </li>
