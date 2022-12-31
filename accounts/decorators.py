@@ -15,3 +15,10 @@ def allowed_users(allowed_roles=[]):
 			return view_func(request,*args,**kwargs)
 		return wrapper_func
 	return decorator
+def subscription_required(view_func):
+    def wrapper_func(request, *args, **kwargs):
+        if request.user.subscription.is_active:
+            return view_func(request, *args, **kwargs)
+        else:
+            return redirect('subscription_page')
+    return wrapper_func
