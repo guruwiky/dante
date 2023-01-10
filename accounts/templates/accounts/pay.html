@@ -2,25 +2,50 @@
 {% block content %}
 {% load static %}
 {% load crispy_forms_tags %}
+<div class="page-content-wrapper">
+                          
+
+<div class="col-md">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="card-title">Welcome {{request.user}}</h4>
+                                        
+<p class="card-title-desc">
+Follow the procedure below to activate your account.
+<br>
+✓ Go to lipa na mpesa <br>
+✓ Paybill number 4098949 (Elite Nerdy Turtle) <br>
+✓ Account number reference <br>
+✓ Amount KSH.450 <br>
+✓ Enter M-pesa pin to complete the transaction <br>
+✓ Once done, copy the M-PESA code (i.e RA72N6QO2G) and paste it below to activate your account instantly 
+</p>
 <form method="post">
     {% csrf_token %}
     <div class="input-group mb-3">
       <div class="input-group-append">
-        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+        
     </div>
-    {{form.phone_number}}
+    <div class="mb-3">
+    <label class="form-label">Transaction Code*</label>
+    <div>
+        <input data-parsley-type="text" input-mode="text" name="code" type="text" class="form-control" required="" onkeyup="nospaces(this)" placeholder="Enter M-PESA transaction code i.e QBH2C7T2L6"> 
     </div>
-            <div class="input-group mb-3">
-              <div class="input-group-append">
-                <span class="input-group-text"><i class="fas fa-money"></i></span>
-    </div>
-    {{form.amount}}
-     </div>
-      <div class="d-flex justify-content-center mt-3 login_container">
-    </div>
+</div>
 
-    <button type="submit" class="btn btn-primary">Make Payment</button>
+
+<div class="mb-0">
+    <div>
+        <button type="submit" name="activate_now" class="btn btn-primary waves-effect waves-light me-1">
+            ACTIVATE ACCOUNT
+        </button>
+
+     
+    </div>
+</div>
 </form>
+
 <script>
             /* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
     //We start indexing at one because CSRF_token is considered and input field 
@@ -28,7 +53,7 @@
 
     //Query All input fields
     var form_fields = document.getElementsByTagName('input')
-    form_fields[1].placeholder='phone_number..';
+    form_fields[1].placeholder='Enter transaction code..';
     form_fields[2].placeholder='Amount..pay 350';
     form_fields[3].placeholder='Last Name..';
     form_fields[4].placeholder='Email..';

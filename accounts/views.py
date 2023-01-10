@@ -11,6 +11,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.views.generic import ListView
 from requests.auth import HTTPBasicAuth
+from django.http import HttpResponse, JsonResponse
+import requests
+import json
+
+from django.views.decorators.csrf import csrf_exempt
 
 
 import requests
@@ -22,31 +27,19 @@ from .decorators import *
 
 @login_required(login_url='login')
 def home(request, *args, **kwargs):
-    try:
-        #balance = Account.balance
-        # = Balance.objects.get(id=id)
-        #user=User.objects.get(pk=pk)
-        #writers = Writer.objects.filter(id=writer.id)
-        pk = request.user.id
-       
-        
-        #balance=writer.balance
-        
-        balance_r = Account.objects.get(pk=pk)
-    except Account.DoesNotExist:
-            balance_r = Account.objects.create(
-              user=request.user
-            )
-            balance_r.save()
-
-   
-    orders = Order.objects.all()
-    total_orders = orders.count()
+    #writer=Writer.objects.get(id=pk)
+    user = (kwargs.get('ref_code'))
+    writer = Writer.objects.get(user=user)
+    request.session['ref_writer'] = writer.id
+    orders = writer.order_set.all()
+    status=writer.status
+    balance=writer.balance
+    order_count=orders.count()
     delivered = orders.filter(status='Delivered').count()
     pending = orders.filter(status='Pending').count()
 
-    context = {'orders':orders, 
-    'total_orders':total_orders,'delivered':delivered, 'balance_r':balance_r,  
+    context = {'orders':orders, 'order_count':order_count, 'writer':writer, 'balance': balance,
+    'delivered':delivered, 
     'pending':pending }
 
 
@@ -73,7 +66,7 @@ def loginPage(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('home user.id')
+                return redirect('home')
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
@@ -114,6 +107,7 @@ def signup(request):
                 name=user.username,
                 phone_number=user.phone_number,
                 email=email,
+                balance=balance
                 )
 
             messages.success(request, 'Account was created for ' + username)
@@ -149,10 +143,7 @@ def simple_upload(request):
             'uploaded_file_url': uploaded_file_url
         })
     return render(request, 'accounts/simple_upload.html')
-def stk_push_callback(request):
-        data = request.body
-        
-        return HttpResponse("STK Push in Django👋")
+
 class MembershipView(ListView):
     model = Membership
     template_name = 'accounts/plans.html'
@@ -169,77 +160,24 @@ class MembershipView(ListView):
 def pay(request):
     if request.method == 'POST':
         # Get the payment details from the form
-        form = WithdrawForm(request.POST)
+        form = PaymentForm(request.POST)
         if form.is_valid():
             cl = MpesaClient()
             account_reference = 'reference'
             transaction_desc = 'Description'
-            amount = 350
+            amount = 450
             phone_number = request.POST['phone_number']
-            api_URL = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
-            consumer_key = 'vHz4VLhPsGNDI4LaCopTn7fli4rSZ0aM'
-            consumer_secret = 'XPB0nMwxYmg5DH5Q'
-            callback_url = 'https://darajambili.herokuapp.com/express-payment';
+            api_URL = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest' 
+            consumer_key = 'AE9TW0DNG7LMmoE1Ddv88gIeUAAgdVwE'
+            consumer_secret = 'TEYy9G8ky2Ahkwmg'
+            callback_url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
 
-            # Set up the Mpesa API endpoint and headers
-            #api_endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-            headers = {
-                "Authorization": "Bearer YOUR_ACCESS_TOKEN",
-                "Content-Type": "application/json"
-            }
+            
+            return HttpResponse(response.response_description)
 
-            # Set up the payload for the Mpesa API request
-            payload = {
-                "BusinessShortCode": '174379',
-                "Password": "YOUR_ENCRYPTED_PASSWORD",
-                "Timestamp": "YYYYMMDDHHMMSS",
-                "TransactionType": "CustomerPayBillOnline",
-                "Amount": amount,
-                "PartyA": phone_number,
-                "PartyB": '174379',
-                "PhoneNumber": phone_number,
-                "CallBackURL": "YOUR_CALLBACK_URL",
-                "AccountReference": "Payment for product XYZ",
-                "TransactionDesc": "Payment for product XYZ"
-            }
-
-        # Make the API request to initiate the payment
-        response = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
-
-        # Check the response status code
-        if response.status_code == 0:
-            # Payment request was successful, parse the response to get the checkout request ID
-            response_json = response.json()
-            checkout_request_id = '<Checkout request ID>'
-
-            # Store the transaction details in the database
-            Transaction.objects.create(
-                phone_number=phone_number,
-                amount=amount,
-                checkout_request_id=checkout_request_id
-            )
-            try:
-                    
-                    pk = request.user.id
-                    balance_r = Account.objects.get(pk=pk)
-            except Account.DoesNotExist:
-                        balance_r = Account.objects.create(
-                          user=request.user
-                        )
-                        balance_r.save()
-                        
-                        balance_r.balance += amount
-                        account.save()
-
-            # Redirect the user to the Mpesa Daraja API payment page
-            return HttpResponse("success")
-        else:
-            # Payment request failed, return an error message
-            return HttpResponse("Error making payment. Please try again.")
-
-    # Render the payment form template
-    form = WithdrawForm()
+            # Render the payment form template
+    form = PaymentForm()
     return render(request, 'accounts/pay.html',{'form': form})
 def withdraw(request):
     if request.method == 'POST':
@@ -291,4 +229,92 @@ def withdraw(request):
         form = WithdrawForm()
         form = WithdrawForm()
     return render(request, 'accounts/withdraw.html', {'form': form})
+def getAccessToken(request):
+    consumer_key = 'vHz4VLhPsGNDI4LaCopTn7fli4rSZ0aM'
+    consumer_secret = 'XPB0nMwxYmg5DH5Q'
+    api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+
+    r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token['access_token']
+
+    return HttpResponse(validated_mpesa_access_token)
+
+
+#def lipa_na_mpesa_online(request):
+   # access_token = MpesaAccessToken.validated_mpesa_access_token
+    #api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    #headers = {"Authorization": "Bearer %s" % access_token}
+    #request = {
+        #"BusinessShortCode": LipanaMpesaPpassword.Business_short_code,
+        #"Password": LipanaMpesaPpassword.decode_password,
+        #"Timestamp": LipanaMpesaPpassword.lipa_time,
+        #"TransactionType": "CustomerPayBillOnline",
+        #"Amount": 1,
+        #"PartyA": 254758578816,  # replace with your phone number to get stk push
+        #"PartyB": LipanaMpesaPpassword.Business_short_code,
+        #"PhoneNumber": 254758578816,  # replace with your phone number to get stk push
+        #"CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
+        #"AccountReference": "Daniel Mawioo",
+        #"TransactionDesc": "Testing stk push"
+    #}
+
+    #response = requests.post(api_url, json=request, headers=headers)
+    #return HttpResponse('success')
+
+
+@csrf_exempt
+def register_urls(request):
+    access_token = MpesaAccessToken.validated_mpesa_access_token
+    api_url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl"
+    headers = {"Authorization": "Bearer %s" % access_token}
+    options = {"ShortCode": LipanaMpesaPpassword.Test_c2b_shortcode,
+               "ResponseType": "Completed",
+               "ConfirmationURL": "https://8472-197-232-61-238.ngrok.io/api/v1/c2b/confirmation",
+               "ValidationURL": "https://8472-197-232-61-238.ngrok.io/api/v1/c2b/validation"}
+    response = requests.post(api_url, json=options, headers=headers)
+
+    return HttpResponse(response.text)
+
+
+@csrf_exempt
+def call_back(request):
+    pass
+
+
+@csrf_exempt
+def validation(request):
+
+    context = {
+        "ResultCode": 0,
+        "ResultDesc": "Accepted"
+    }
+    return JsonResponse(dict(context))
+
+
+@csrf_exempt
+def stk_push_callback(request):
+    data =request.body.decode('utf-8')
+    #mpesa_payment = json.loads(data)
+
+    #payment = MpesaPayment(
+        #first_name=mpesa_payment['FirstName'],
+        #last_name=mpesa_payment['LastName'],
+        #middle_name=mpesa_payment['MiddleName'],
+        #description=mpesa_payment['TransID'],
+        #phone_number=mpesa_payment['MSISDN'],
+        #amount=mpesa_payment['TransAmount'],
+        #reference=mpesa_payment['BillRefNumber'],
+        #organization_balance=mpesa_payment['OrgAccountBalance'],
+        #type=mpesa_payment['TransactionType'],
+
+    #)
+    #payment.save()
+
+    context = {
+        "ResultCode": 0,
+        "ResultDesc": "Accepted"
+    }
+#
+    return JsonResponse(dict(context))
 

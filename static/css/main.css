@@ -23,3 +23,95 @@
   max-width: 100%;
   height: auto;
 }
+element.style {
+}
+.page-title-box {
+    background: url(../images/bg.jpg);
+    background-size: cover;
+    -webkit-box-shadow: 0 2px 3px rgb(0 0 0 / 8%);
+    box-shadow: 0 2px 3px rgb(0 0 0 / 8%);
+    margin: 0 -30px 23px -30px;
+    padding: 20px 30px 99px 30px;
+    color: #fff;
+}
+.align-items-center {
+    -webkit-box-align: center!important;
+    -ms-flex-align: center!important;
+    align-items: center!important;
+}
+.justify-content-between {
+    -webkit-box-pack: justify!important;
+    -ms-flex-pack: justify!important;
+    justify-content: space-between!important;
+}
+.d-flex {
+    display: -webkit-box!important;
+    display: -ms-flexbox!important;
+    display: flex!important;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+.row {
+    --bs-gutter-x: 1.875rem;
+    --bs-gutter-y: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-top: calc(var(--bs-gutter-y) * -1);
+    margin-right: calc(var(--bs-gutter-x)/ -2);
+    margin-left: calc(var(--bs-gutter-x)/ -2);
+}
+body {
+    margin: 0;
+    font-family: var(--bs-font-sans-serif);
+    font-size: .84375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #f3f3f3;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+:root {
+    --bs-blue: #1b82ec;
+    --bs-indigo: #4a5fc6;
+    --bs-purple: #6f42c1;
+    --bs-pink: #e83e8c;
+    --bs-red: #f16c69;
+    --bs-orange: #f1734f;
+    --bs-yellow: #f5b225;
+    --bs-green: #35a989;
+    --bs-teal: #2a3142;
+    --bs-cyan: #29bbe3;
+    --bs-white: #fff;
+    --bs-gray: #74788d;
+    --bs-gray-dark: #343a40;
+    --bs-primary: #1b82ec;
+    --bs-secondary: #495057;
+    --bs-success: #35a989;
+    --bs-info: #29bbe3;
+    --bs-warning: #f5b225;
+    --bs-danger: #f16c69;
+    --bs-pink: #e83e8c;
+    --bs-light: #eff2f7;
+    --bs-dark: #343a40;
+    --bs-font-sans-serif: "Roboto",sans-serif;
+    --bs-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}

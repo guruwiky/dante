@@ -3,35 +3,117 @@
 {% block content %}
 {% load static %}
 <head>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
 </head>
+<div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between" style="background-color: #929fba; box-shadow: 0 2px 3px rgb(0 0 0 / 8%); padding: 20px 30px 99px 30px;background-size: cover;">
+
+                                    <div class="page-title">
+                                        
+                                      <h6 class="breadcrumb-item active">
+
+               
+<p id="demo"></p>
+
+
+<script>
+var month = "Jan";
+var date = "11";
+var year = "2023";
+ var countDownDate = new Date(month + " " + date + ", "+ year +" 08:00:00").getTime();
+//console.log(countDownDate);
+//var countDownDate = new Date("Dec 05, 2022 08:00:00").getTime();
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+  // Output the result in an element with id="demo"
+  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s "+ "~ to new tasks.";
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "TASK ALREADY POSTED";
+  }
+}, 1000);
+</script>                                         </h6>
+</div>
+
+<div class="state-information  d-sm-block">
+
+<!--<div class="state-graph" style="margin-top:-13px">-->
+<!--    <div id="header-chart-1"></div>-->
+<!--</div>-->
+
+
+                                    <div class="state-graph" style="margin-top:-10px">
+<div id="header-chart-2"></div>
+<i class="fa fa-bar-chart" style="font-size:48px;color:red"></i>
+<br>
+<div class="info" style="margin-bottom:-5px">Currently Available Gigs 
+</div>
+     <div class="info" style="margin-bottom:-5px;">
+Basic Level: 0
+</div>
+      <div class="info" style="margin-bottom:-5px">
+Premium Level: 0
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<br>
 {%  include 'accounts/status.html' %}
  
 
-<div class="row">
-	<div class="col-md">
-		<div class="card card-body">
-			<table class="table table-sm">
-				<tr>
-					<th>Order</th>
-					<th>Subject</th>
-					<th>Price</th>
-					<th>Status</th>
-				</tr>
-
-				{% for order in orders %}
-
-				<tr>
-					<td>{{order.gig}}</td>
-					<td>{{gig.subject}}</td>
-					<td>{{order.price}}</td>
-					<td>{{order.status}}</td>
-				</tr>
-				{% endfor %}
-
-			</table>
+<br>
+<H5><strong> Available orders:</strong></H5>
+<div class="container-fluid">
+		<div class="row">
+			{% for gig in gigs %}
+			<div class="col-md-6">
+			<div class="card">
+				<div class="card">
+					<h5><strong>Title:{{gig.title}}</strong></h5>
+					<h6>Subject:{{gig.subject}}</h6>
+					<h6>Deadline:{{gig.deadline}}</h6>
+					<p class="card-text">{{gig.description}}</p>
+					<h5 style="display:inline-block;float:right" >Price:Ksh.{{gig.price|floatformat:2}}</h5>
+					<div class="card-footer">
+						<h5>
+							<a class="btn btn-ountline-success" href="#"> Bid </a>
+						</h5>
+					</div>
+				</div>
 		</div>
+
+
+
+
+		</div>
+		{% endfor %}
 	</div>
 </div>
-
 {% endblock content %}

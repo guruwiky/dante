@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 class User(AbstractUser):
 	phone_number= PhoneNumberField()
 
+
 # Create your models here.
 STATUS = ((1, "Pending"), (0, "Complete"))
 
@@ -22,19 +23,24 @@ class Transaction(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	ip = models.CharField(max_length=200, blank=True, null=True)
 
-	def __unicode__(self):
+	def __str__(self):
 		return f"{self.transaction_no}"
+STATUS=(
+			('Inactive','Inactive'),
+			('Active','Active'),
+		)
 class Writer(models.Model):
-	user = models.OneToOneField(get_user_model(), null=True, blank=True,on_delete=models.CASCADE)
+	user = models.OneToOneField(User, null=True, blank=True,on_delete=models.CASCADE)
 	name=models.CharField(max_length=200, null=True)
 	code=models.CharField(max_length=12, blank=True)
 	phone_number=models.CharField(max_length=200, null=True, blank=True)
 	email=models.CharField(max_length=200, null=True)
-	active = models.BooleanField(default=False, null=True, blank=True)
+	status = models.CharField(choices=STATUS, max_length=15, default='Inactive', null=True, blank=True)
 	recommended_by=models.ForeignKey(User, null=True, blank=True,on_delete=models.CASCADE, related_name='ref_by')
 	balance= models.FloatField(null=True, blank=True ,default=0.00)
 	def __str__(self):
-		return self.writer.user.username
+		if self.user:
+			return self.user.username
 
 	def deposit(self, amount):
 		self.balance += amount
@@ -51,7 +57,8 @@ class Writer(models.Model):
 		self.save()
 	
 	def __str__(self):
-		 return f"{self.user.username}-{self.code}"
+		if self.user:
+			return f"{self.user.username}-{self.code}"
 	
 	def get_recommened_profiles(self):
 	   pass
@@ -64,7 +71,7 @@ class Writer(models.Model):
 	
 class Account(models.Model):
 	balance = models.DecimalField(max_digits=10, decimal_places=2 ,null=True, default=0)
-	user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	
 
 
@@ -141,4 +148,52 @@ class Order(models.Model):
 	gig=models.ForeignKey(Gig,null=True, on_delete=models.SET_NULL)
 	price=models.FloatField(null=True)
 	status=models.CharField(max_length=200, null=True,choices=STATUS)
-   
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+# M-pesa Payment models
+
+class MpesaCalls(BaseModel):
+    ip_address = models.TextField()
+    caller = models.TextField()
+    conversation_id = models.TextField()
+    content = models.TextField()
+
+    class Meta:
+        verbose_name = 'Mpesa Call'
+        verbose_name_plural = 'Mpesa Calls'
+
+
+class MpesaCallBacks(BaseModel):
+    ip_address = models.TextField()
+    caller = models.TextField()
+    conversation_id = models.TextField()
+    content = models.TextField()
+
+    class Meta:
+        verbose_name = 'Mpesa Call Back'
+        verbose_name_plural = 'Mpesa Call Backs'
+
+
+class MpesaPayment(BaseModel):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    type = models.TextField()
+    reference = models.TextField()
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    phone_number = models.TextField()
+    organization_balance = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        verbose_name = 'Mpesa Payment'
+        verbose_name_plural = 'Mpesa Payments'
+
+    def __str__(self):
+        return self.first_name

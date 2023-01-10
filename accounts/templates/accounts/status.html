@@ -19,9 +19,12 @@
 			<div class="card text-center text-white  mb-3" id="orders-delivered">
 			  	<div class="card-header">
 			  		<h5 class="card-title">STATUS:</h5>
+
 			  	</div>
 			  	<div class="card-body">
-			    	<h3 class="card-title">Inactive</h3>
+
+			    	<h3 class="card-title">{{writer.statu}} <span><button name="activate_now" class="btn btn-sm btn-danger" type="button" href="{% url 'pay' %}">ACTIVATE </button></span></h3>
+
 			  	</div>
 			</div>
 		</div>
@@ -47,7 +50,7 @@
 			  		<h5 class="card-title">BALANCE</h5>
 			  	</div>
 			  	<div class="card-body">
-			    	<h3 class="card-title">Ksh: {{balance_r.balance|floatformat:2}}</h3>
+			    	<h3 class="card-title">Ksh: {{balance|floatformat:2}}</h3>
 			  	</div>
 			</div>
 		</div>

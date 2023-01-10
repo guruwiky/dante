@@ -14,6 +14,7 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <link href="assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
 
     
 
@@ -59,6 +60,7 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
@@ -69,9 +71,47 @@
       </li>
     </ul>
   </div>
+  <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="mdi mdi-bell"></i>
+                    <span class="badge bg-info rounded-pill">
+                        1                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-notifications-dropdown">
+                    <h5 class="p-3 text-dark mb-0">Notifications (1)</h5>
+                    <div data-simplebar style="max-height: 230px;">
+
+
+                        <a href="#" class="text-reset notification-item">
+                            <div class="d-flex mt-3">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-warning rounded-circle font-size-16">
+                                        <i class="mdi mdi-message"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-1">
+                                                                                                                                         
+                          <h6 class="mb-1">Message(s) from CEO</h6>
+                                                                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1"> To the new members training is not yet scheduled, once it is scheduled, you will be notified here so that you can make your applications. [ Posted on: 07/01/2023 23:43:57 ]</p>
+                                                </div>
+                                                
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-2 d-grid">
+                        <a class="font-size-14 text-center" href="javascript:void(0)">View all</a>
+                    </div>
+                </div>
+            </div>
   <span class="hello-msg">Hello {{request.user}}!</span>
   <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
 </nav>
+
 
 <div class="container-fluid">
   <div class="row">
@@ -97,6 +137,13 @@
               <i class="fas fa-coins"></i>
               
               Gigs
+            </a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{% url 'pay' %}">
+              <i class="fab fa-accusoft"></i>
+              
+              Submit Tasks
             </a>
           </li>
           <li class="nav-item">
