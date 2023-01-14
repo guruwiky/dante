@@ -35,7 +35,6 @@ phonenumberslite==8.13.1
 Pillow==9.0.0
 pipenv==2022.10.12
 platformdirs==2.5.2
-psycopg2==2.9.3
 pycparser==2.21
 pyHanko==0.12.1
 pyhanko-certvalidator==0.19.5
